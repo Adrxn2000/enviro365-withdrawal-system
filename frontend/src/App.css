@@ -1,0 +1,358 @@
+/* ===== Layout shell ===== */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: var(--navy-950);
+  color: var(--white);
+  padding: 28px 0;
+}
+
+.app-header__inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.app-header__brand {
+  display: block;
+  color: var(--gold-500);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+}
+
+.app-header h1 {
+  color: var(--white);
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.app-main {
+  flex: 1;
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.app-grid__side {
+  position: sticky;
+  top: 24px;
+}
+
+.app-grid__main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0; /* prevents the history table from overflowing its grid column */
+}
+
+@media (max-width: 760px) {
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
+  .app-grid__side {
+    position: static;
+  }
+}
+
+.loading-note {
+  color: var(--slate-500);
+}
+
+/* ===== Panels =====
+   Flat panels with a colored left-border accent, rather than rounded
+   cards with drop shadows on every side - a deliberate callback to the
+   section styling in the actual eTalente/Enviro365 assessment document. */
+.panel {
+  background: var(--white);
+  border: 1px solid var(--slate-100);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-panel);
+  display: flex;
+  overflow: hidden;
+}
+
+.panel-accent {
+  width: 4px;
+  background: var(--gold-500);
+  flex-shrink: 0;
+}
+
+.panel-body {
+  padding: 24px;
+  flex: 1;
+  min-width: 0;
+}
+
+.panel-body h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+/* ===== Portfolio summary ===== */
+.investor-details {
+  display: flex;
+  gap: 24px;
+  margin: 0 0 20px;
+}
+
+.investor-details dt {
+  font-size: 12px;
+  color: var(--slate-500);
+  margin-bottom: 2px;
+}
+
+.investor-details dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--navy-950);
+}
+
+.balance-block {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background: var(--cream-50);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+
+.balance-label {
+  font-size: 12px;
+  color: var(--slate-500);
+  margin-bottom: 4px;
+}
+
+.balance-figure {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--navy-950);
+}
+
+.products-heading {
+  font-size: 13px;
+  color: var(--slate-500);
+  margin-bottom: 8px;
+}
+
+.product-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.product-list li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--slate-100);
+}
+
+.product-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.product-type {
+  color: var(--slate-500);
+}
+
+.empty-note {
+  color: var(--slate-500);
+  font-size: 14px;
+}
+
+/* ===== Forms ===== */
+.field {
+  display: block;
+  margin-bottom: 18px;
+  border: none;
+  padding: 0;
+}
+
+.field > span,
+.field legend {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy-950);
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.field input[type='number'],
+.field input[type='date'],
+.field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--slate-300);
+  border-radius: var(--radius);
+  font-size: 15px;
+  color: var(--slate-700);
+  background: var(--white);
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--gold-600);
+}
+
+.radio-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 400;
+  font-size: 14px;
+  margin-right: 20px;
+  color: var(--slate-700);
+}
+
+.field-hint {
+  font-size: 13px;
+  color: var(--slate-500);
+  margin: 8px 0 0;
+}
+
+.form-error {
+  color: var(--red-600);
+  font-size: 13px;
+  margin: -8px 0 16px;
+}
+
+.btn-primary {
+  background: var(--navy-950);
+  color: var(--white);
+  border: none;
+  padding: 11px 22px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--navy-700);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  display: inline-block;
+  background: var(--white);
+  color: var(--navy-950);
+  border: 1px solid var(--slate-300);
+  padding: 9px 16px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  border-color: var(--gold-600);
+}
+
+/* ===== History table ===== */
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.history-header h2 {
+  margin-bottom: 0;
+}
+
+.filters {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.field-inline {
+  margin-bottom: 0;
+  min-width: 140px;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.history-table th {
+  text-align: left;
+  font-size: 12px;
+  color: var(--slate-500);
+  font-weight: 600;
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--slate-100);
+}
+
+.history-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--slate-100);
+  color: var(--slate-700);
+}
+
+.history-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===== Status banner ===== */
+.status-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.status-banner--error {
+  background: var(--red-50);
+  color: var(--red-600);
+  border: 1px solid rgba(192, 57, 43, 0.25);
+}
+
+.status-banner--success {
+  background: var(--green-50);
+  color: var(--green-600);
+  border: 1px solid rgba(46, 125, 91, 0.25);
+}
+
+.status-banner__dismiss {
+  background: none;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.6;
+  padding: 0 0 0 12px;
+}
+
+.status-banner__dismiss:hover {
+  opacity: 1;
+}

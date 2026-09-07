@@ -1,0 +1,85 @@
+/* ===== Design tokens =====
+   Palette pulled from the Enviro365 assessment brief itself (navy + gold),
+   not a generic default - see the design plan discussed in chat. */
+:root {
+  --navy-950: #0a1f3d;
+  --navy-800: #123059;
+  --navy-700: #1c3f70;
+  --gold-500: #d9a441;
+  --gold-600: #b8862c;
+  --cream-50: #f7f5f0;
+  --white: #ffffff;
+  --slate-700: #3d4654;
+  --slate-500: #6b7383;
+  --slate-300: #c7ccd4;
+  --slate-100: #e9ebee;
+  --red-600: #c0392b;
+  --red-50: #fbeceb;
+  --green-600: #2e7d5b;
+  --green-50: #eaf5f0;
+
+  --font-sans: 'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --radius: 3px;
+  --shadow-panel: 0 1px 2px rgba(10, 31, 61, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--cream-50);
+  color: var(--slate-700);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-sans);
+  color: var(--navy-950);
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input,
+select {
+  font-family: inherit;
+}
+
+/* Numeric alignment for currency figures, without reaching for a
+   monospace typeface purely for decoration - tabular-nums keeps digit
+   widths equal so amounts line up in the table. */
+.figure {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold-600);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
