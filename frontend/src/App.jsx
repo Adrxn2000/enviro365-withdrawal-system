@@ -1,27 +1,20 @@
 import { useEffect, useState, useCallback } from 'react';
 import './App.css';
-import { getPortfolio, getWithdrawalHistory, createWithdrawal } from './api/client';
+import { getAllPortfolios, getPortfolio, getWithdrawalHistory, createWithdrawal } from './api/client';
+import PortfolioSwitcher from './components/PortfolioSwitcher';
 import PortfolioSummary from './components/PortfolioSummary';
 import WithdrawalForm from './components/WithdrawalForm';
 import WithdrawalHistoryTable from './components/WithdrawalHistoryTable';
 import StatusBanner from './components/StatusBanner';
 
-// Hardcoded to the first seeded portfolio (Thabo Nkosi, age 68 - see the
-// backend's data.sql). A real multi-investor app would get this from a
-// login/selection screen; out of scope for this assessment, so it's a
-// single constant instead of over-building a feature nobody asked for.
-const PORTFOLIO_ID = 1;
-
-/**
- * App.jsx is the "container" component: it owns all the state (portfolio,
- * history, loading, errors) and all the API calls, then passes plain data
- * and callback functions down to the presentational components above.
- * This split - "smart" container vs "dumb" presentational components -
- * means PortfolioSummary/WithdrawalForm/WithdrawalHistoryTable can be
- * understood, reused, or tested without knowing anything about fetch()
- * or API URLs at all.
- */
 export default function App() {
+  // The list of ALL portfolios (for the switcher) is separate from the
+  // currently-selected one's full detail + history - two different
+  // pieces of state because they come from two different endpoints and
+  // change at different times.
+  const [portfolioList, setPortfolioList] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
+
   const [portfolio, setPortfolio] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,18 +22,35 @@ export default function App() {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
-  // useCallback keeps this function's identity stable across re-renders,
-  // so it's safe to list as a dependency in the useEffect below without
-  // causing an infinite refetch loop.
-  const loadData = useCallback(async () => {
+  // Runs once on mount: fetch the list of investors/portfolios for the
+  // switcher, and default the selection to the first one returned.
+  useEffect(() => {
+    async function loadPortfolioList() {
+      try {
+        const list = await getAllPortfolios();
+        setPortfolioList(list);
+        if (list.length > 0) {
+          setSelectedId(list[0].portfolioId);
+        }
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    }
+    loadPortfolioList();
+  }, []);
+
+  // Loads the FULL detail (products, etc.) + history for whichever
+  // portfolio is currently selected. useCallback + selectedId as a
+  // dependency means this function is recreated only when the selected
+  // portfolio actually changes, which is also what the effect below
+  // watches for.
+  const loadSelectedPortfolio = useCallback(async (portfolioId) => {
     setError(null);
     try {
-      // Run both requests concurrently rather than one after another -
-      // they don't depend on each other's results, so there's no reason
-      // to make the user wait for them sequentially.
       const [portfolioData, historyData] = await Promise.all([
-        getPortfolio(PORTFOLIO_ID),
-        getWithdrawalHistory(PORTFOLIO_ID),
+        getPortfolio(portfolioId),
+        getWithdrawalHistory(portfolioId),
       ]);
       setPortfolio(portfolioData);
       setHistory(historyData);
@@ -51,30 +61,25 @@ export default function App() {
     }
   }, []);
 
-  // Empty dependency array = runs once, when the component first mounts -
-  // this is how the app loads its initial data on page load.
+  // Whenever selectedId changes (initial load, or the user clicks a
+  // different radio button), reload that portfolio's detail + history.
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    if (selectedId !== null) {
+      setLoading(true);
+      loadSelectedPortfolio(selectedId);
+    }
+  }, [selectedId, loadSelectedPortfolio]);
 
   async function handleWithdrawalSubmit({ amount, type }, onSuccess) {
     setSubmitting(true);
     setError(null);
     setSuccessMessage(null);
     try {
-      await createWithdrawal({ portfolioId: PORTFOLIO_ID, amount, type });
+      await createWithdrawal({ portfolioId: selectedId, amount, type });
       setSuccessMessage(`Withdrawal of ${formatCurrency(amount)} was processed successfully.`);
       onSuccess();
-      // Re-fetch rather than manually patching local state (e.g.
-      // subtracting `amount` from portfolio.balance in place) - the
-      // backend is the single source of truth for the balance, and this
-      // guarantees the UI always reflects exactly what was persisted.
-      await loadData();
+      await loadSelectedPortfolio(selectedId);
     } catch (err) {
-      // err.message here is the exact string the backend's
-      // GlobalExceptionHandler sent back - e.g. "Withdrawal amount
-      // (91000.00) exceeds 90% of balance. Maximum allowed: 90000.00" -
-      // shown to the user verbatim, since it's already specific and clear.
       setError(err.message);
     } finally {
       setSubmitting(false);
@@ -98,6 +103,14 @@ export default function App() {
           onDismiss={() => setSuccessMessage(null)}
         />
 
+        {portfolioList.length > 1 && (
+          <PortfolioSwitcher
+            portfolios={portfolioList}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+          />
+        )}
+
         {loading ? (
           <p className="loading-note">Loading portfolio…</p>
         ) : (
@@ -111,7 +124,7 @@ export default function App() {
                 onSubmit={handleWithdrawalSubmit}
                 submitting={submitting}
               />
-              <WithdrawalHistoryTable history={history} portfolioId={PORTFOLIO_ID} />
+              <WithdrawalHistoryTable history={history} portfolioId={selectedId} />
             </div>
           </div>
         )}

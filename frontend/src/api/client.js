@@ -46,6 +46,10 @@ export function getPortfolio(portfolioId) {
   return request(`/api/portfolios/${portfolioId}`);
 }
 
+export function getAllPortfolios() {
+  return request('/api/portfolios');
+}
+
 export function createWithdrawal({ portfolioId, amount, type }) {
   return request('/api/withdrawals', {
     method: 'POST',

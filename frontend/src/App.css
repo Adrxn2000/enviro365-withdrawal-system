@@ -356,3 +356,19 @@
 .status-banner__dismiss:hover {
   opacity: 1;
 }
+
+.portfolio-switcher {
+  background: var(--white);
+  border: 1px solid var(--slate-100);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.portfolio-switcher__label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy-950);
+  margin-bottom: 10px;
+}
